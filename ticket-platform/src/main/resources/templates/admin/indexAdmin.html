@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{'/fragments/headFragment' :: head}">
+    <title>Home Admin</title>
+</head>
+<body>
+    <header th:replace="~{'/fragments/navbar' :: header}"></header>
+
+    <main class="container mt-5">
+        <div class="row">
+            <div class="col-12" th:unless="${list.isEmpty()}">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Titolo
+                            </th>
+                            <th>
+                                Categoria
+                            </th>
+                            <th>
+                                Operatore
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                <!-- spazio per il dettaglio-->
+                            </th>
+                            <th>
+                                <!-- spazio per la modifica-->
+                            </th>
+                            <th>
+                                <!-- spazio per la cancellazione-->
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ticket : ${list}">
+                            <td th:text="${ticket.titolo}">
+                            </td>
+                            <td th:text="${ticket.categoria.nome}">
+                            </td>
+                            <td th:text="${ticket.user_id}">
+                            </td>
+                            <td th:text="${ticket.status}">
+                            </td>
+                                <a th:href="@{|/dettaglioTicket/${ticket.id}|}" class="btn btn-primary"><i class="fas fa-info"></i></a>
+                            <td>
+                                
+                            </td>
+                            <!-- MODIFICA TICKET -->
+                            <td>
+                                
+                            </td>
+                            <!-- CANCELLAZIONE TICKET -->
+                            <td>
+                                
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="text-center mt-5" th:if="${list.isEmpty()}">
+            <h3>La lista dei Ticket è vuota</h3>
+        </div>
+        
+    </main>
+
+
+
+</body>
+
+</html>

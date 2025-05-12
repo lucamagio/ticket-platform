@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{'/fragments/headFragment' :: head}">
+    <title>Dettagli Pizza</title>
+</head>
+<body>
+    <header th:replace="~{'/fragments/navbar' :: header}"></header>
+        <main class="text-center">
+            <h2 class="mt-3" th:text="${ticket.titolo}"></h2>
+            <div class="container mt-3">
+                <div class="row">
+                    <div>
+                        <p class="mb-3" th:text="${ticket.descrizione}"></p>
+                    </div>
+                    <div>
+                        <p class="mb-3" th:text="${ticket.status}"></p>
+                    </div>
+                    <div>
+                        <ul th:each="categoria : ${ticket.categoria}">
+                            <li th:text="categoria.nome"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--
+                <div class="mt-3">
+                <a th:href="@{|/ticket/${ticket.id}/editNote|}" class="btn btn-primary">Aggiungi Nota</a>
+            </div>
+            <div class="mt-3">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Titolo
+                            </th>
+                            <th>
+                                Data creazione
+                            </th>
+                            <th>
+                                Modifica
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="nota : ${ticket.note}">
+                            <td th:text="${nota.titolo}"></td>
+                            <td th:text="${nota.dataCreazione}"></td>
+                            <td>
+                                <a th:href="@{|/note/editNote/${note.ticket.id}|}" class="btn btn-primary"><i class="fas fa-pencil"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            -->
+        </main>
+</body>
+
+</html>
+
+<style>
+    main{
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #dedada;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+    }
+</style>

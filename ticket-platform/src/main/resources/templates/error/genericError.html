@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <head th:replace="~{'/fragments/headFragment' :: head}">
+    <title th:text="${errorMessage}"></title>
+<body>
+    <main class="container text-center">
+        <h3 th:text="|Errore durante la richiesta: ${errorCause}|" class="mt-5"></h3>
+    </main>
+</body>
+
+</html>
