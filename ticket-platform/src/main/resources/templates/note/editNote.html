@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{'/fragments/headFragment' :: head}">
+    <title>Note Editor</title>
+</head>
+<body>
+    <header th:replace="~{'/fragments/navbar' :: header}"></header>
+
+    <main class="container mt-5">
+        <div class="text-center mt-5">
+            <h3>Note Editor</h3>
+        </div>
+        <form id="nota-form" th:object="${nota}" th:action="${editMode} ? @{|/note/editNote/${nota.id}|} : @{/note/editNote}" method="post">
+            <input type="hidden" th:field="*{ticket}" id="ticket">
+                <div>
+                    <div class="row">
+                        <div class="col-12 mt-5">
+                            <label class="form-label">Titolo</label>
+                            <input type="text" id="titolo" th:field="*{titolo}" class="form-control" th:errorClass="is-invalid">
+                            <ul th:if="${#fields.hasErrors('titolo')}">
+                                <li th:each="err : ${#fields.error('titolo')}" class="text-danger" th:text="${err}"></li>
+                            </ul>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <label class="form-label">Descrizione</label>
+                            <input type="text" id="descrizione" th:field="*{descrizione}" class="form-control" th:errorClass="is-invalid">
+                            <ul th:if="${#fields.hasErrors('descrizione')}">
+                                <li th:each="err : ${#fields.error('descrizione')}" class="text-danger" th:text="${err}"></li>
+                            </ul>
+                        </div>
+                        <div class="mt-5">
+                            <button class="btn btn-primary" type="submit">Salva</button>
+                            <a th:href="@{|/admin/dettaglioTicket/*{ticket.id}|}" class="btn btn-danger">Annulla</a>
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </main>
+</body>
+
+</html>
+
+<style>
+    main{
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #dedada;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+    }
+</style>

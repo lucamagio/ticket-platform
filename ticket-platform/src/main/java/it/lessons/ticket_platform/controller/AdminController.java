@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import it.lessons.ticket_platform.repository.CategorieRepository;
+import it.lessons.ticket_platform.repository.NoteRepository;
 import it.lessons.ticket_platform.repository.TicketRepository;
 import it.lessons.ticket_platform.repository.TicketStatusRepository;
 import it.lessons.ticket_platform.repository.UserRepository;
 import it.lessons.ticket_platform.model.Ticket;
+import it.lessons.ticket_platform.model.Note;
 import it.lessons.ticket_platform.model.TicketStatus;
 import it.lessons.ticket_platform.service.TicketService;
 
@@ -43,6 +45,9 @@ public class AdminController {
     @Autowired
     private TicketStatusRepository ticketStatusRepository;
 
+    @Autowired
+    private NoteRepository noteRepository;
+
     @GetMapping()
     public String list(Model model, @RequestParam(name="keyword", required = false) String titolo) {
 
@@ -58,6 +63,7 @@ public class AdminController {
 
         if (optTicket.isPresent()) {
             model.addAttribute("ticket", optTicket.get());
+            model.addAttribute("listaNote", noteRepository.findAll());
             return "ticket/dettaglioTicket";
         }
 
@@ -97,7 +103,13 @@ public class AdminController {
     //Cancellazione ticket
     @PostMapping("/delete/{id}")
     public String deleteTicket(@PathVariable ("id") Long id) {
-        
+
+        Ticket ticket = ticketRepository.findById(id).get();
+
+        for(Note nota : ticket.getNote()){
+            noteRepository.deleteById(nota.getId());
+        }
+
         ticketRepository.deleteById(id);
         
         return "redirect:/admin";

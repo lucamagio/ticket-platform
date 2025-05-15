@@ -1,6 +1,6 @@
 package it.lessons.ticket_platform.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -28,7 +28,7 @@ public class Note {
     private String descrizione;
 
     @CreationTimestamp
-    private LocalDateTime dataCreazione;
+    private LocalDate dataCreazione;
 
     @ManyToOne
     @JsonBackReference
@@ -64,11 +64,11 @@ public class Note {
         this.descrizione = descrizione;
     }
 
-    public LocalDateTime getDataCreazione() {
+    public LocalDate getDataCreazione() {
         return dataCreazione;
     }
 
-    public void setDataCreazione(LocalDateTime dataCreazione) {
+    public void setDataCreazione(LocalDate dataCreazione) {
         this.dataCreazione = dataCreazione;
     }
 
@@ -87,5 +87,4 @@ public class Note {
     public void setUser(User user) {
         this.user = user;
     }
-
 }

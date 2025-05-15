@@ -1,5 +1,7 @@
 package it.lessons.ticket_platform.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,16 +12,18 @@ import it.lessons.ticket_platform.repository.CategorieRepository;
 import it.lessons.ticket_platform.repository.TicketRepository;
 import it.lessons.ticket_platform.repository.TicketStatusRepository;
 import it.lessons.ticket_platform.repository.UserRepository;
+import it.lessons.ticket_platform.service.TicketService;
 import it.lessons.ticket_platform.model.Ticket;
 import it.lessons.ticket_platform.model.TicketStatus;
+import it.lessons.ticket_platform.model.User;
+import it.lessons.ticket_platform.model.Note;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -38,6 +42,9 @@ public class TicketController {
 
     @Autowired
     private CategorieRepository categorieRepository;
+
+    @Autowired
+    private TicketService ticketService;
 
     //Creazione ticket
     @PostMapping("/createTicket")
@@ -75,5 +82,25 @@ public class TicketController {
 
         return "redirect:/admin";
     }
+
+    //Creazione nota
+    @GetMapping("/{id}/editNote")
+    public String editNote(@PathVariable ("id") Long id, Model model) {
+
+        Note nota = new Note();
+        //User user = userService.findById(principal.getId());
+
+        nota.setTicket(ticketService.ticketSpecificoId(id).get());
+        nota.setDataCreazione(LocalDate.now());
+        //nota.setUser(user);
+
+
+        model.addAttribute("nota", nota);
+        model.addAttribute("editMode", false);
+
+        return "/note/editNote";
+    }
     
 }
+
+

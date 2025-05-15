@@ -2,65 +2,67 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{'/fragments/headFragment' :: head}">
-    <title>Dettagli Pizza</title>
+    <title>Dettaglio Ticket</title>
 </head>
 <body>
     <header th:replace="~{'/fragments/navbar' :: header}"></header>
-        <main class="text-center" th:classappend="${ticket.status.id == 1 ? 'bg-daFare' : (ticket.status.id == 2 ? 'bg-inCorso' : 'bg-chiuso')}">
-            <h2 class="mt-3" th:text="${ticket.titolo}"></h2>
-            <div class="container mt-3">
-                <div class="row">
-                    <div>
-                        <p class="mb-3" th:text="${ticket.descrizione}"></p>
+        <main class="container">
+            <div class="row">
+
+                <!--Ticket-->
+                <div id="ticket" class="text-center" th:classappend="${ticket.status.id == 1 ? 'bg-daFare' : (ticket.status.id == 2 ? 'bg-inCorso' : 'bg-chiuso')}">
+                    <h2 class="mt-3" th:text="${ticket.titolo}"></h2>
+                    <div class="container mt-3">
+                        <div class="row">
+                            <div>
+                                <p class="mb-3" th:text="${ticket.descrizione}"></p>
+                            </div>
+                            <div class="mt-4">
+                                <h4 class="mb-4" th:text="${ticket.status.status}"></h4>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="categorie-wrapper" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem;">
+                                            <h5>Categoria:</h5>
+                                            <div class="categorie-wrapper" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                                <span th:each="categoria, iterStat : ${ticket.categorie}" th:text="${categoria.nome + (iterStat.last ? '' : ', ')}" class="categoria-pill"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mt-5">
-                        <p class="mb-3" th:text="${ticket.status.status}"></p>
+                    <div class="mt-3">
+                        <a th:href="@{|/ticket/${ticket.id}/editNote|}" class="btn btn-primary">Aggiungi Nota</a>
                     </div>
-                    <div>
-                        <ul class="list-unstyled" th:each="categoria : ${ticket.categorie}">
-                            <li th:text="${categoria.nome}"></li>
-                        </ul>
+                    <div class="mt-3" th:if="${listaNote.isEmpty()}">
+                        <h5>Lista note vuota</h5>
+                    </div>
+                </div>
+
+                <!--Note-->
+                <div class="mt-3" th:unless="${listaNote.isEmpty()}">
+                    <div class="postit">
+                        <div>
+                          <h2 th:text="${ticket.nota.titolo}"></h2>
+                          <div class="meta" th:text="'Creata da ' + ${ticket.nota.user_id} + ' il ' + ${ticket.nota.dataCreazione}"></div>
+                          <div class="description" th:text="${ticket.nota.descrizione}"></div>
+                        </div>
+                        <div class="actions">
+                          <a class="edit btn">Modifica</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!--
-                <div class="mt-3">
-                <a th:href="@{|/ticket/${ticket.id}/editNote|}" class="btn btn-primary">Aggiungi Nota</a>
-            </div>
-            <div class="mt-3">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                Titolo
-                            </th>
-                            <th>
-                                Data creazione
-                            </th>
-                            <th>
-                                Modifica
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="nota : ${ticket.note}">
-                            <td th:text="${nota.titolo}"></td>
-                            <td th:text="${nota.dataCreazione}"></td>
-                            <td>
-                                <a th:href="@{|/note/editNote/${note.ticket.id}|}" class="btn btn-primary"><i class="fas fa-pencil"></i></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            -->
         </main>
 </body>
 
 </html>
 
 <style>
-    main{
+    #ticket{
         font-family: Arial, sans-serif;
         max-width: 600px;
         margin: 40px auto;
@@ -69,14 +71,74 @@
         border-radius: 12px;
     }
     .bg-daFare {
-        background-color: green; /* colore per stato "aperto" */
+        background-color: rgb(2, 204, 2);
     }
 
     .bg-inCorso {
-        background-color: yellow; /* colore per stato "in corso" */
+        background-color: yellow;
     }
 
     .bg-chiuso {
-        background-color: red; /* colore per stato "chiuso" */
+        background-color: rgb(255, 63, 63);
+    }
+    .postit {
+      width: 250px;
+      max-height: 500px;
+      background-color: #fff475;
+      padding: 20px;
+      box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+      border-radius: 10px;
+      transform: rotate(-1deg);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .postit::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-width: 0 0 20px 20px;
+      border-style: solid;
+      border-color: transparent transparent #e6db55 transparent;
+      background-color: transparent;
+    }
+    .postit h2 {
+      margin: 0 0 10px;
+      font-size: 1.3rem;
+    }
+    .meta {
+      font-size: 0.85rem;
+      color: #444;
+      margin-bottom: 10px;
+    }
+    .description {
+      font-size: 0.95rem;
+      flex-grow: 1;
+      overflow-y: auto;
+      margin-bottom: 15px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+    .actions button {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .actions .edit {
+      background-color: #4caf50;
+      color: white;
+    }
+    .actions button:hover {
+      opacity: 0.85;
+    }
+    .categoria-pill {
+      display: inline-block;
     }
 </style>
