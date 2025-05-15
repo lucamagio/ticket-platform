@@ -1,4 +1,4 @@
-package it.lessons.ticket_platform.Repository;
+package it.lessons.ticket_platform.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -16,7 +16,7 @@ public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     
     @NotBlank(message = "Inserire un Nome valido")
     private String nome;
@@ -25,11 +25,11 @@ public class Categoria {
     @JsonBackReference
     private List<Ticket> tickets;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

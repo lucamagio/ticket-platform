@@ -2,6 +2,8 @@ package it.lessons.ticket_platform.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,6 +40,7 @@ public class User {
     private List<Role> roles;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "user")

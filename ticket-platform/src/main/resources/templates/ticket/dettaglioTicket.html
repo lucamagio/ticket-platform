@@ -6,19 +6,19 @@
 </head>
 <body>
     <header th:replace="~{'/fragments/navbar' :: header}"></header>
-        <main class="text-center">
+        <main class="text-center" th:classappend="${ticket.status.id == 1 ? 'bg-daFare' : (ticket.status.id == 2 ? 'bg-inCorso' : 'bg-chiuso')}">
             <h2 class="mt-3" th:text="${ticket.titolo}"></h2>
             <div class="container mt-3">
                 <div class="row">
                     <div>
                         <p class="mb-3" th:text="${ticket.descrizione}"></p>
                     </div>
-                    <div>
-                        <p class="mb-3" th:text="${ticket.status}"></p>
+                    <div class="mt-5">
+                        <p class="mb-3" th:text="${ticket.status.status}"></p>
                     </div>
                     <div>
-                        <ul th:each="categoria : ${ticket.categoria}">
-                            <li th:text="categoria.nome"></li>
+                        <ul class="list-unstyled" th:each="categoria : ${ticket.categorie}">
+                            <li th:text="${categoria.nome}"></li>
                         </ul>
                     </div>
                 </div>
@@ -65,8 +65,18 @@
         max-width: 600px;
         margin: 40px auto;
         padding: 20px;
-        background-color: #dedada;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         border-radius: 12px;
+    }
+    .bg-daFare {
+        background-color: green; /* colore per stato "aperto" */
+    }
+
+    .bg-inCorso {
+        background-color: yellow; /* colore per stato "in corso" */
+    }
+
+    .bg-chiuso {
+        background-color: red; /* colore per stato "chiuso" */
     }
 </style>
