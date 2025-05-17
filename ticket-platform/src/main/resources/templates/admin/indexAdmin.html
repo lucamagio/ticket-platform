@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{'/fragments/headFragment' :: head}">
     <title>Home Admin</title>
@@ -9,66 +9,59 @@
 
     <main class="container mt-5">
         <h2 class="mb-5 text-center">Lista Ticket</h2>
-
-            <div th:unless="${list.isEmpty()}">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>
-                                Titolo
-                            </th>
-                            <th>
-                                Categoria
-                            </th>
-                            <th>
-                                Operatore
-                            </th>
-                            <th>
-                                Status
-                            </th>
-                            <th>
-                                <!-- spazio per il dettaglio-->
-                                <!-- spazio per la modifica-->
-                                <!-- spazio per la cancellazione-->
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="ticket : ${list}">
-                            <td th:text="${ticket.titolo}">
-                            </td>
-                            <td>
-                                <!--Con iterStat.last dopo l'ultima iterazione non mette la virgola con l'operatore ternario-->
-                                <span th:each="categoria, iterStat : ${ticket.categorie}" th:text="${categoria.nome + (iterStat.last ? '' : ', ')}"></span>
-                            </td>
-                            <td th:text="${ticket.user.id}">
-                            </td>
-                            <td th:text="${ticket.status.status}">
-                            </td>
-                            <td>
-                                <div class="d-flex justify-content-around">
-                                    <a th:href="@{|/admin/dettaglioTicket/${ticket.id}|}" class="btn btn-primary"><i class="fas fa-circle-info"></i></a>
-                                    <a th:href="@{|/admin/editTicket/${ticket.id}|}"  class="btn btn-primary"><i class="fas fa-pencil"></i></a>
-                                    <form action="#" th:action="@{|/admin/delete/${ticket.id}|}" method="post">
-                                        <button class="btn btn-danger" type="submit" id="submitButton" onclick="return confirm('Sei sicuro?')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
+        <div th:unless="${list.isEmpty()}">
+           <table class="table table-striped">
+                <thead>
+                   <tr>
+                        <th>
+                            Titolo
+                        </th>
+                        <th>
+                            Categoria
+                        </th>
+                        <th>
+                            Operatore
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            <!-- spazio per il dettaglio-->
+                            <!-- spazio per la modifica-->
+                            <!-- spazio per la cancellazione-->
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="ticket : ${list}">
+                        <td th:text="${ticket.titolo}"></td>
+                        <td>
+                            <!--Con iterStat.last dopo l'ultima iterazione non mette la virgola con l'operatore ternario-->
+                            <span th:each="categoria, iterStat : ${ticket.categorie}" th:text="${categoria.nome + (iterStat.last ? '' : ', ')}"></span>
+                        </td>
+                        <td th:text="${ticket.user.id}">
+                        </td>
+                        <td th:text="${ticket.status.status}">
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-around">
+                                <a th:href="@{|/admin/dettaglioTicket/${ticket.id}|}" class="btn btn-primary"><i class="fas fa-circle-info"></i></a>
+                                <a th:href="@{|/admin/editTicket/${ticket.id}|}"  class="btn btn-primary"><i class="fas fa-pencil"></i></a>
+                                <form action="#" th:action="@{|/admin/delete/${ticket.id}|}" method="post">
+                                    <button class="btn btn-danger" type="submit" id="submitButton" onclick="return confirm('Sei sicuro?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="text-center mt-5" th:if="${list.isEmpty()}">
             <h3>La lista dei Ticket è vuota</h3>
         </div>
-        
     </main>
-
-
-
 </body>
 
 </html>

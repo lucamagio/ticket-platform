@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <header th:fragment="navbar">
     <nav class="navbar navbar-dark navbar-expand-lg bg-black">
@@ -14,7 +14,8 @@
                 <a class="nav-link active text-white" aria-current="page" th:href="@{/admin}">Home</a>
               </li>
               <li>
-                <a class="nav-link text-white" th:href="@{/admin/createTicket}">Crea Ticket</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-white" th:href="@{/admin/createTicket}">Crea Ticket</a>
+                <a sec:authorize="hasAuthority('OPERATORE')" class="nav-link text-white" th:href="@{/user/profiloUser}">Profilo</a>
               </li>
               <li class=" nav-item ms-0 ms-lg-5">
                 <div class="d-flex justify-content-between">

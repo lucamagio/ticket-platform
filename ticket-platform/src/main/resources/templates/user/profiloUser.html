@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{'/fragments/headFragment' :: head}">
+    <title>Home User</title>
+</head>
+<body>
+    <header th:replace="~{'/fragments/navbar' :: header}"></header>
+
+    <main class="container mt-5 text-center">
+       <div class="row" id="profilo">
+            <h2 th:text="'Operatore numero: ' + ${user.id}"></h2>
+            <div class="col-12 mt-3">
+                <label class="form-label"><h5>Email</h5></label>
+                <p th:text="${user.email}"></p>                          
+            </div>
+            <div class="col-12 mt-3">
+                <label class="form-label"><h5>Password</h5></label>
+                <p>*************</p>                          
+            </div>
+            <div class="col-12 mt-3">
+                <label class="form-label"><h5>Stato:</h5></label>
+                <span th:text="${user.disponibile ? 'Attivo' : 'Non Attivo'}" th:classappend="${user.disponibile} ? 'badge bg-success' : 'badge bg-danger'"></span>           
+            </div>
+            <div class="text-center">
+                <a th:href="@{|/user/editProfilo/${user.id}|}"  class="btn btn-primary mt-3"><i class="fas fa-pencil"></i></a>
+            </div>
+       </div>
+    </main>
+</body>
+</html>
+
+<style>
+    #profilo{
+        font-family: Arial, sans-serif;
+        max-width: 400px;
+        margin: 40px auto;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+    }
+</style>

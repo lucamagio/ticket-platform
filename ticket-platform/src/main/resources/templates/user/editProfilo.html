@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{'/fragments/headFragment' :: head}">
+    <title>Home User</title>
+</head>
+<body>
+    <header th:replace="~{'/fragments/navbar' :: header}"></header>
+
+    <main class="container mt-5 text-center">
+       <div class="row" id="profilo">
+            <h2 th:text="'Operatore numero: ' + ${user.id}"></h2>
+            <form id="user-form" th:object="${user}" th:action="@{|/user/editProfilo/${user.id}|}" method="post">
+                <input type="hidden" th:field="*{id}"/>
+                <div class="col-12 mt-3">
+                    <label class="form-label"><h5>Email</h5></label>
+                    <input type="text" id="email" th:field="*{email}" class="form-control" th:errorClass="is-invalid">
+                    <ul class="list-unstyled" th:if="${#fields.hasErrors('email')}">
+                        <li th:each="err : ${#fields.errors('email')}" class="text-danger" th:text="${err}"></li>
+                    </ul>                         
+                </div>
+                <div class="col-12 mt-3">
+                    <label class="form-label"><h5>Password</h5></label>
+                    <input type="text" id="password" th:field="*{password}" class="form-control" th:errorClass="is-invalid">
+                    <ul class="list-unstyled" th:if="${#fields.hasErrors('password')}">
+                        <li th:each="err : ${#fields.errors('password')}" class="text-danger" th:text="${err}"></li>
+                    </ul>                         
+                </div>
+                <div class="col-12 mt-3">
+                    <label class="form-label"><h5>Stato:</h5></label>
+                    <input type="checkbox" th:field="*{disponibile}" />
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">Aggiorna Profilo</button>
+                </div>
+            </form>
+       </div>
+    </main>
+</body>
+</html>
+
+<style>
+    #profilo{
+        font-family: Arial, sans-serif;
+        max-width: 400px;
+        margin: 40px auto;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+    }
+</style>

@@ -4,32 +4,21 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import it.lessons.ticket_platform.repository.CategorieRepository;
 import it.lessons.ticket_platform.repository.NoteRepository;
 import it.lessons.ticket_platform.repository.TicketRepository;
-import it.lessons.ticket_platform.repository.TicketStatusRepository;
-import it.lessons.ticket_platform.repository.UserRepository;
-import it.lessons.ticket_platform.model.Categoria;
+import it.lessons.ticket_platform.security.DatabaseUserDetails;
 import it.lessons.ticket_platform.model.Note;
 import it.lessons.ticket_platform.model.Ticket;
-import it.lessons.ticket_platform.model.User;
 
 @Service
 public class TicketService {
 
     @Autowired
     public TicketRepository ticketRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private CategorieRepository categorieRepository;
-
-    @Autowired
-    private TicketStatusRepository ticketStatusRepository;
 
     @Autowired
     private NoteRepository noteRepository;
@@ -64,6 +53,16 @@ public class TicketService {
         for(Note nota : ticket.getNote()){
             noteRepository.deleteById(nota.getId());
         }
+    }
+
+    public List<Ticket> getTicketPerOperatoreLoggato() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        DatabaseUserDetails userDetails = (DatabaseUserDetails) auth.getPrincipal();
+
+        Integer userId = userDetails.getId();
+
+        // Recupera i ticket associati all'id dell'operatore loggato
+        return ticketRepository.findByUserId(userId.intValue());
     }
 
 }

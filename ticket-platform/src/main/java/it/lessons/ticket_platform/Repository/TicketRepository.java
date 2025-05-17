@@ -8,4 +8,5 @@ import it.lessons.ticket_platform.model.Ticket;
 public interface TicketRepository extends JpaRepository<Ticket, Long>{
 
     List<Ticket> findByTitoloContainingIgnoreCase(String titolo);
+    List<Ticket> findByUserId(Integer userId);
 }

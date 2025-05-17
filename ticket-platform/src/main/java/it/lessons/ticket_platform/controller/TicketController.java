@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 
+
 @Controller
 @RequestMapping("/ticket")
 public class TicketController {
@@ -100,6 +101,22 @@ public class TicketController {
 
         return "/note/editNote";
     }
+
+    //Modifica ticket status
+    @PostMapping("editTicketStatus/{id}")
+    public String editTicketStatus(@ModelAttribute("ticket") Ticket formTicket, Model model) {
+
+        // Recupero l'oggetto completo dell'utente
+        Integer userId = formTicket.getUser().getId();
+        User user = userRepository.findById(userId).get();
+
+        formTicket.setUser(user);
+
+        ticketRepository.save(formTicket);
+        
+        return "redirect:/user";
+    }
+    
     
 }
 

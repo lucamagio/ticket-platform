@@ -1,12 +1,11 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{'/fragments/headFragment' :: head}">
     <title>Note Editor</title>
 </head>
 <body>
     <header th:replace="~{'/fragments/navbar' :: header}"></header>
-
     <main class="container mt-5">
         <div class="text-center mt-5">
             <h3>Note Editor</h3>
@@ -31,7 +30,8 @@
                         </div>
                         <div class="mt-5">
                             <button class="btn btn-primary" type="submit">Salva</button>
-                            <a th:href="@{|/admin/dettaglioTicket/*{ticket.id}|}" class="btn btn-danger">Annulla</a>
+                            <a sec:authorize="hasAuthority('ADMIN')" th:href="@{|/admin/dettaglioTicket/*{ticket.id}|}" class="btn btn-danger">Annulla</a>
+                            <a sec:authorize="hasAuthority('OPERATORE')" th:href="@{|/user/dettaglioTicket/*{ticket.id}|}" class="btn btn-danger">Annulla</a>
                         </div>
                     </div>
                 </div>

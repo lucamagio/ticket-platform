@@ -11,29 +11,30 @@
         <div class="text-center mt-5">
             <h3>Ticket Editor</h3>
         </div>
-        <form id="ticket-form" th:object="${ticket}" th:action="@{|/ticket/editTicket/${ticket.id}|}" method="post">
+        <form id="ticket-form" th:object="${ticket}" th:action="@{|/ticket/editTicketStatus/${ticket.id}|}" method="post">
             <div class="row">
                 <div class="col-6">
                     <div class="row">
                         <div class="col-12 mt-5">
                             <label class="form-label">Titolo</label>
-                            <input type="text" id="titolo" th:field="*{titolo}" class="form-control" th:errorClass="is-invalid">
+                            <input type="text" id="titolo" th:field="*{titolo}" class="form-control" th:errorClass="is-invalid" readonly>
                             <ul th:if="${#fields.hasErrors('titolo')}">
                                 <li th:each="err : ${#fields.errors('titolo')}" class="text-danger" th:text="${err}"></li>
                             </ul>
                         </div>
                         <div class="col-12 mt-3">
                             <label class="form-label">Descrizione</label>
-                            <input type="text" id="descrizione" th:field="*{descrizione}" class="form-control" th:errorClass="is-invalid">
+                            <input type="text" id="descrizione" th:field="*{descrizione}" class="form-control" th:errorClass="is-invalid" readonly>
                             <ul th:if="${#fields.hasErrors('descrizione')}">
                                 <li th:each="err : ${#fields.errors('descrizione')}" class="text-danger" th:text="${err}"></li>
                             </ul>
                         </div>
                         <div class="col-12 mt-3">
                             <label class="form-label">Operatore</label>
-                            <select th:field="*{user}" class="form-control" th:errorClass="is-invalid">
+                            <select th:field="*{user.id}" class="form-control" th:errorClass="is-invalid" disabled>
                                 <option th:each="user : ${listaUser}" th:value="${user.id}" th:text="${user.id}"></option>
-                            </select>                            
+                            </select>
+                            <input type="hidden" th:field="*{user.id}" /> <!--Aggiunto al form sennò disable non passa il valore al form-->                            
                         </div>
                         <div class="col-12 mt-3">
                             <label class="form-label">Status</label>
@@ -43,16 +44,15 @@
                         </div>
                         <div class="mt-5">
                             <button class="btn btn-primary" type="submit">Salva</button>
-                            <a th:href="@{/admin}" class="btn btn-danger">Annulla</a>
+                            <a th:href="@{/user}" class="btn btn-danger">Annulla</a>
                         </div>
                     </div>
                 </div>
-
                 <div class="col-6 mt-5">
                     <h4>Categorie</h4>
                     <div class="form-check" th:each="categoria : ${listaCategorie}">
-                        <input class="form-check-input" type="checkbox" th:id="${categoria.id}" th:value="${categoria.id}" th:field="*{categorie}">
-                        <label class="form-check-label" th:for="${categoria.id}" th:text="${categoria.nome}"></label>
+                        <input class="form-check-input" type="checkbox" th:id="${categoria.id}" th:value="${categoria.id}" th:field="*{categorie}" disabled>
+                        <input type="hidden" name="categorie" th:value="${categoria.id}" th:if="${#lists.contains(ticket.categorie, categoria)}"/>
                     </div>
                 </div>
             </div>
