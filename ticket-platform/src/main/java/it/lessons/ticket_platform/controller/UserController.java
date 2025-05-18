@@ -48,7 +48,6 @@ public class UserController {
     @Autowired
     private NoteRepository noteRepository;
 
-    //Da implementare con la lista dei ticket che solo utente loggato può vedere
     @GetMapping()
     public String list(Model model, @RequestParam(name="keyword", required = false) String titolo) {
 
@@ -61,7 +60,7 @@ public class UserController {
         return "user/indexUser";
     }
 
-    //Dettaglio profilo da implementare
+    //Dettaglio profilo
     @GetMapping("/profiloUser/{id}")
     public String profiloUser(@PathVariable ("id") Integer id, Model model) {
         
@@ -78,7 +77,7 @@ public class UserController {
         return "error/genericError";
     }
 
-    //Modifica profilo da implementare
+    //Modifica profilo
     @GetMapping("/editProfilo/{id}")
     public String editProfilo(@PathVariable ("id") Integer id, Model model) {
 
@@ -92,6 +91,14 @@ public class UserController {
         
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", formUser);
+            return "user/editProfilo";
+        }
+
+        int ticketAperti = ticketRepository.countTicketApertiByUserId(formUser.getId());
+        if (!formUser.getDisponibile() && ticketAperti > 0) {
+            formUser.setDisponibile(true);
+            model.addAttribute("user", formUser);
+            model.addAttribute("erroreDisponibilita", "Non puoi disattivarti se hai ticket aperti");
             return "user/editProfilo";
         }
 

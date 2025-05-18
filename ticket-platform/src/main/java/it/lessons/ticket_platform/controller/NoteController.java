@@ -1,13 +1,19 @@
 package it.lessons.ticket_platform.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import it.lessons.ticket_platform.repository.NoteRepository;
+import it.lessons.ticket_platform.repository.UserRepository;
+import it.lessons.ticket_platform.security.DatabaseUserDetails;
 import it.lessons.ticket_platform.model.Note;
+import it.lessons.ticket_platform.model.User;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,15 +29,24 @@ public class NoteController {
     @Autowired
     private NoteRepository noteRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     //Creazione nota
     @PostMapping("/editNote")
-    public String editNote(@Valid @ModelAttribute("nota") Note formNota, BindingResult bindingResult, Model model) {
+    public String editNote(@Valid @ModelAttribute("nota") Note formNota, BindingResult bindingResult, Model model, @AuthenticationPrincipal DatabaseUserDetails userDetails) {
         
         if (bindingResult.hasErrors()) {
             model.addAttribute("editMode", false);
             model.addAttribute("nota", formNota);
 
             return "note/editNote";
+        }
+
+        Optional<User> optUser = userRepository.findById(userDetails.getId());
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            formNota.setUser(user);
         }
 
         noteRepository.save(formNota);

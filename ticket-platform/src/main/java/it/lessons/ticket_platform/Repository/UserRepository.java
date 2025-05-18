@@ -12,6 +12,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     
     public Optional<User> findByEmail(String email);
 
-    @Query("SELECT user FROM User JOIN user.roles role WHERE role.name = 'OPERATORE' AND user.disponibile = true")
+    @Query("SELECT user FROM User user JOIN user.roles role WHERE role.name = 'OPERATORE' AND user.disponibile = true")
     List<User> findOperatoriDisponibili();
 }

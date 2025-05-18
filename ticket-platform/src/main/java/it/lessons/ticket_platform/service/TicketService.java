@@ -8,11 +8,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import it.lessons.ticket_platform.repository.CategorieRepository;
 import it.lessons.ticket_platform.repository.NoteRepository;
 import it.lessons.ticket_platform.repository.TicketRepository;
+import it.lessons.ticket_platform.repository.TicketStatusRepository;
+import it.lessons.ticket_platform.repository.UserRepository;
 import it.lessons.ticket_platform.security.DatabaseUserDetails;
 import it.lessons.ticket_platform.model.Note;
 import it.lessons.ticket_platform.model.Ticket;
+import it.lessons.ticket_platform.model.User;
+import it.lessons.ticket_platform.model.Categoria;
+import it.lessons.ticket_platform.model.TicketStatus;
 
 @Service
 public class TicketService {
@@ -22,6 +28,16 @@ public class TicketService {
 
     @Autowired
     private NoteRepository noteRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CategorieRepository categorieRepository;
+
+    @Autowired
+    private TicketStatusRepository ticketStatusRepository;
+
 
     public List<Ticket> filtroTitolo(String titolo){
 
@@ -56,6 +72,7 @@ public class TicketService {
     }
 
     public List<Ticket> getTicketPerOperatoreLoggato() {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         DatabaseUserDetails userDetails = (DatabaseUserDetails) auth.getPrincipal();
 
@@ -63,6 +80,39 @@ public class TicketService {
 
         // Recupera i ticket associati all'id dell'operatore loggato
         return ticketRepository.findByUserId(userId.intValue());
+    }
+
+    public void isDisponibile(Integer userId){
+
+        int ticketAperti = ticketRepository.countTicketApertiByUserId(userId);
+
+        User user = userRepository.findById(userId).get();
+
+        user.setDisponibile(ticketAperti == 0);
+
+        userRepository.save(user);
+    }
+
+    public List<Ticket> filtroCategoria(Integer categoriaId){
+
+        Optional<Categoria> optCategoria = categorieRepository.findById(categoriaId);
+
+        if (optCategoria.isEmpty()) {
+            return ticketRepository.findAll();
+        } else{
+            return ticketRepository.findByCategoriaId(categoriaId);
+        }
+    }
+
+    public List<Ticket> filtroStatus(Integer statusId){
+        
+        Optional<TicketStatus> optStatus = ticketStatusRepository.findById(statusId);
+
+        if (optStatus.isEmpty()) {
+            return ticketRepository.findAll();
+        } else{
+            return ticketRepository.findByStatusId(statusId);
+        }
     }
 
 }
