@@ -11,11 +11,17 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link active text-white" aria-current="page" th:href="@{/admin}">Home</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-white" th:href="@{/admin}">Home</a>
+                <a sec:authorize="hasAuthority('OPERATORE')" class="nav-link text-white" th:href="@{/user}">Home</a>
               </li>
               <li>
                 <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-white" th:href="@{/admin/createTicket}">Crea Ticket</a>
-                <a sec:authorize="hasAuthority('OPERATORE')" class="nav-link text-white" th:href="@{/user/profiloUser}">Profilo</a>
+                <a sec:authorize="hasAuthority('OPERATORE')" class="nav-link text-white" th:href="@{|/user/profiloUser/${#authentication.principal.id}|}">Profilo</a>
+              </li>
+              <li class="nav-item ms-lg-3">
+                <form th:action="@{/logout}" method="post">
+                  <button type="submit" class="btn btn-outline-light">Logout</button>
+                </form>
               </li>
               <li class=" nav-item ms-0 ms-lg-5">
                 <div class="d-flex justify-content-between">

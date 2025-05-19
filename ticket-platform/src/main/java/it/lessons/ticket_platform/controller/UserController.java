@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +19,7 @@ import it.lessons.ticket_platform.repository.NoteRepository;
 import it.lessons.ticket_platform.repository.TicketRepository;
 import it.lessons.ticket_platform.repository.TicketStatusRepository;
 import it.lessons.ticket_platform.repository.UserRepository;
+import it.lessons.ticket_platform.security.DatabaseUserDetails;
 import it.lessons.ticket_platform.model.Ticket;
 import it.lessons.ticket_platform.model.User;
 import it.lessons.ticket_platform.service.TicketService;
@@ -51,11 +56,7 @@ public class UserController {
     @GetMapping()
     public String list(Model model, @RequestParam(name="keyword", required = false) String titolo) {
 
-        List<Ticket> tickets = ticketService.getTicketPerOperatoreLoggato();
-
-        model.addAttribute("list", tickets);
-
-        model.addAttribute("list", ticketService.filtroTitolo(titolo));
+        model.addAttribute("list", ticketService.filtroTitoloPerOperatoreLoggato(titolo));
         
         return "user/indexUser";
     }
@@ -89,11 +90,6 @@ public class UserController {
     @PostMapping("/editProfilo/{id}")
     public String editProfilo(@Valid @ModelAttribute("user") User formUser, BindingResult bindingResult, Model model) {
         
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("user", formUser);
-            return "user/editProfilo";
-        }
-
         int ticketAperti = ticketRepository.countTicketApertiByUserId(formUser.getId());
         if (!formUser.getDisponibile() && ticketAperti > 0) {
             formUser.setDisponibile(true);
@@ -102,7 +98,32 @@ public class UserController {
             return "user/editProfilo";
         }
 
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("user", formUser);
+            return "user/editProfilo";
+        }
+
+        //Risettaggio del ruolo nello user
+        User existingUser = userRepository.findById(formUser.getId()).get();
+        formUser.setRoles(existingUser.getRoles());
+
         userRepository.save(formUser);
+
+        //Aggiornamento delle autorizzazioni dell'utente dopo la modifica del profilo
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.getName().equals(formUser.getEmail())) {
+
+        UserDetails updatedUserDetails = new DatabaseUserDetails(formUser);
+
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+            updatedUserDetails, 
+            updatedUserDetails.getPassword(), 
+            updatedUserDetails.getAuthorities()
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+    }
         
         return "user/profiloUser";
     }

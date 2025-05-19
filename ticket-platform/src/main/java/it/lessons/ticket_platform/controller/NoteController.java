@@ -3,7 +3,10 @@ package it.lessons.ticket_platform.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -51,7 +54,13 @@ public class NoteController {
 
         noteRepository.save(formNota);
         
-        return "redirect:/admin/dettaglioTicket" + formNota.getTicket().getId();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
+            return "redirect:/admin/dettaglioTicket/" + formNota.getTicket().getId();
+        } else {
+            return "redirect:/user/dettaglioTicket/" + formNota.getTicket().getId();
+        }
     }
     
     //Modifica nota
@@ -67,7 +76,7 @@ public class NoteController {
     }
 
     @PostMapping("/editNote/{id}")
-    public String doEditNote(@Valid @ModelAttribute("nota") Note formNota, BindingResult bindingResult, Model model) {
+    public String doEditNote(@Valid @ModelAttribute("nota") Note formNota, BindingResult bindingResult, Model model, @AuthenticationPrincipal DatabaseUserDetails userDetails) {
        
         if (bindingResult.hasErrors()) {
 
@@ -77,9 +86,22 @@ public class NoteController {
             return "note/editNote";
         }
 
+        Optional<User> optUser = userRepository.findById(userDetails.getId());
+
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            formNota.setUser(user);
+        }
+
         noteRepository.save(formNota);
-        
-        return "redirect:/admin/dettaglioTicket" + formNota.getTicket().getId();
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
+            return "redirect:/admin/dettaglioTicket/" + formNota.getTicket().getId();
+        } else {
+            return "redirect:/user/dettaglioTicket/" + formNota.getTicket().getId();
+        }
     }
     
 }

@@ -5,9 +5,10 @@
     <title>Home User</title>
 </head>
 <body>
+    <div class="page-container d-flex flex-column min-vh-100">
     <header th:replace="~{'/fragments/navbar' :: header}"></header>
 
-    <main class="container mt-5 text-center">
+    <main class="container mt-5 flex-grow-1">
        <div class="row" id="profilo">
             <h2 th:text="'Operatore numero: ' + ${user.id}"></h2>
             <form id="user-form" th:object="${user}" th:action="@{|/user/editProfilo/${user.id}|}" method="post">
@@ -29,6 +30,9 @@
                 <div class="col-12 mt-3">
                     <label class="form-label"><h5>Stato:</h5></label>
                     <input type="checkbox" th:field="*{disponibile}" />
+                    <ul class="list-unstyled" th:if="${#fields.hasErrors('disponibile')}">
+                        <li th:each="err : ${#fields.errors('disponibile')}" class="text-danger" th:text="${err}"></li>
+                    </ul>  
                 </div>
                 <div class="mt-3">
                     <button type="submit" class="btn btn-primary">Aggiorna Profilo</button>
@@ -36,6 +40,9 @@
             </form>
        </div>
     </main>
+
+    <div th:replace="fragments/footer :: footerFragment"></div>
+    </div>
 </body>
 </html>
 

@@ -22,4 +22,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>{
     @Query("SELECT t FROM Ticket t JOIN t.status s WHERE s.id = :statusId")
     List<Ticket> findByStatusId(@Param("statusId") Integer statusId);
 
+    @Query("SELECT t FROM Ticket t WHERE t.user.id = :userId AND LOWER(t.titolo) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Ticket> findByUserIdAndTitoloContainingIgnoreCase(@Param("userId") Integer userId, @Param("keyword") String keyword);
+
+
 }

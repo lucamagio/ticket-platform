@@ -115,4 +115,17 @@ public class TicketService {
         }
     }
 
+    public List<Ticket> filtroTitoloPerOperatoreLoggato(String titolo) {
+        
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        DatabaseUserDetails userDetails = (DatabaseUserDetails) auth.getPrincipal();
+        Integer userId = userDetails.getId();
+    
+        if (titolo != null && !titolo.isBlank()) {
+            return ticketRepository.findByUserIdAndTitoloContainingIgnoreCase(userId, titolo);
+        } else {
+            return ticketRepository.findByUserId(userId);
+        }
+    }
+
 }

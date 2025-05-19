@@ -1,13 +1,14 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
 <head th:replace="~{'/fragments/headFragment' :: head}">
     <title>Home User</title>
 </head>
 <body>
+  <div class="page-container d-flex flex-column min-vh-100">
+
     <header th:replace="~{'/fragments/navbar' :: header}"></header>
 
-    <main class="container mt-5 text-center">
+    <main class="container mt-5 text-center flex-grow-1">
        <div class="row" id="profilo">
             <h2 th:text="'Operatore numero: ' + ${user.id}"></h2>
             <div class="col-12 mt-3">
@@ -23,12 +24,17 @@
                 <span th:text="${user.disponibile ? 'Attivo' : 'Non Attivo'}" th:classappend="${user.disponibile} ? 'badge bg-success' : 'badge bg-danger'"></span>           
             </div>
             <div class="text-center">
-                <a th:href="@{|/user/editProfilo/${user.id}|}"  class="btn btn-primary mt-3"><i class="fas fa-pencil"></i></a>
+                <a th:href="@{|/user/editProfilo/${user.id}|}" class="btn btn-primary mt-3"><i class="fas fa-pencil"></i></a>
             </div>
        </div>
     </main>
+
+    <div th:replace="fragments/footer :: footerFragment"></div>
+    
+  </div>
 </body>
 </html>
+
 
 <style>
     #profilo{
