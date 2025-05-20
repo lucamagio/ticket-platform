@@ -53,9 +53,14 @@ public class TicketController {
 
         if (bindingResult.hasErrors()) {
 
+            model.addAttribute("listaUser", userRepository.findOperatoriDisponibili());
+            model.addAttribute("listaCategorie", categorieRepository.findAll());
+            model.addAttribute("listaStatus", ticketStatusRepository.findAll());
+            
             return "ticket/createTicket";
         }
         if (formTicket.getStatus() == null) {
+
             TicketStatus status = ticketStatusRepository.findById(1).get();
 
             formTicket.setStatus(status);

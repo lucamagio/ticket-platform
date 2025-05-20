@@ -21,20 +21,21 @@
                                 <label class="form-label">Titolo</label>
                                 <input type="text" id="titolo" th:field="*{titolo}" class="form-control" th:errorClass="is-invalid">
                                 <ul th:if="${#fields.hasErrors('titolo')}">
-                                    <li th:each="err : ${#fields.error('titolo')}" class="text-danger" th:text="${err}"></li>
+                                    <li th:each="err : ${#fields.errors('titolo')}" class="text-danger" th:text="${err}"></li>
                                 </ul>
                             </div>
                             <div class="col-12 mt-3">
                                 <label class="form-label">Descrizione</label>
                                 <input type="text" id="descrizione" th:field="*{descrizione}" class="form-control" th:errorClass="is-invalid">
                                 <ul th:if="${#fields.hasErrors('descrizione')}">
-                                    <li th:each="err : ${#fields.error('descrizione')}" class="text-danger" th:text="${err}"></li>
+                                    <li th:each="err : ${#fields.errors('descrizione')}" class="text-danger" th:text="${err}"></li>
                                 </ul>
                             </div>
                             <div class="col-12 mt-3">
                                 <label class="form-label">Operatore</label>
                                 <select th:field="*{user}" class="form-control" th:errorClass="is-invalid">
-                                    <option th:each="user : ${listaUser}" th:value="${user.id}" th:text="${user.id}"></option>
+                                    <option th:unless="${listaUser.isEmpty()}" th:each="user : ${listaUser}" th:value="${user.id}" th:text="${user.id}"></option>
+                                    <option th:if="${listaUser.isEmpty()}" value="vuoto">Non ci sono Operatori disponibili</option>
                                 </select>                            
                             </div>
                             <div class="mt-5">

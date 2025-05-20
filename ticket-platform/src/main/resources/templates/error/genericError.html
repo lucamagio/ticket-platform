@@ -5,6 +5,7 @@
     <head th:replace="~{'/fragments/headFragment' :: head}">
     <title th:text="${errorMessage}"></title>
 <body>
+    <header th:replace="~{'/fragments/navbar' :: header}"></header>
     <main class="container text-center">
         <h3 th:text="|Errore durante la richiesta: ${errorCause}|" class="mt-5"></h3>
     </main>

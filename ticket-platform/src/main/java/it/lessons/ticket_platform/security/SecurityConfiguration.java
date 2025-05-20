@@ -13,9 +13,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfiguration {
 
-    @Autowired
-    private MyAuthenticationSuccessHandler successHandler;
-
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
